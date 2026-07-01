@@ -22,10 +22,10 @@ export class Cli {
 			.version(packageJson.version, '-V, --version', 'display the version number');
 
 		program
-			.command('install [skill-folder]')
-			.description('Install all bundled skills into <skill-folder>/skills/ (default: .)')
-			.action(async (skillFolder: string | undefined) => {
-				await Install.run(skillFolder ?? '.');
+			.command('install [agents-folder]')
+			.description('Install all bundled skills into the ai-agents folder, e.g. <agents-folder>/skills/ (default: .)')
+			.action(async (agentsFolder: string | undefined) => {
+				await Install.run(agentsFolder ?? '.');
 			});
 
 		program

@@ -5,9 +5,9 @@ const __dirname = new URL('.', import.meta.url).pathname;
 
 export class Install {
 
-	static async run(skillFolder: string): Promise<void> {
+	static async run(agentsFolder: string): Promise<void> {
 		const sourceSkillsDir = Path.resolve(__dirname, '../../skills');
-		const targetSkillsDir = Path.resolve(skillFolder, 'skills');
+		const targetSkillsDir = Path.resolve(agentsFolder, 'skills');
 		try {
 			const entries = await Fs.promises.readdir(sourceSkillsDir, { withFileTypes: true });
 			const skillDirs = entries.filter((entry) => entry.isDirectory() === true);
