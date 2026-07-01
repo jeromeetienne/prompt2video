@@ -58,6 +58,51 @@ echo "$USER_PROMPT" | npx prompt2video build
 
 The `build` command exits with an error if no prompt is piped on stdin.
 
+## Prompt controls
+
+The prompt isn't just a topic — you can steer the render with optional `key: value` control lines alongside `topic:`/`description:`. Every key is optional; omit one and the skill falls back to a sensible default. You can also just write the instruction in plain English ("make it about a minute, vertical, for kids") and the skill infers the equivalent controls.
+
+| Key | Controls | Example | Default |
+|---|---|---|---|
+| `duration` | target total length | `90s`, `2m` | 1–2 min |
+| `scenes` | number of scenes / slides | `5` | ~4–6 |
+| `aspect` | frame shape | `16:9`, `9:16`, `1:1` | `16:9` |
+| `style` | visual look — a preset and/or free-form descriptors | `dark, neon accents` | `clean` |
+| `voice` | macOS `say` voice | `Samantha`, `Daniel` | system default |
+| `rate` | speech rate (words per minute) | `160` | 175 |
+| `tone` | narration register | `casual`, `formal` | neutral |
+| `audience` | reading level / who it's for | `kids`, `experts` | general |
+| `language` | narration + on-screen language | `French` | English |
+| `captions` | burn per-scene subtitles on screen | `on`, `off` | `off` |
+| `music` | background-music mood, or `off` | `upbeat`, `off` | `off` |
+
+Built-in `style` presets are `clean`, `dark`, `corporate`, `playful`, and `cinematic`; each fixes a palette, font, and transition style so the look stays cohesive across scenes. Free-form descriptors (e.g. brand hex colors, `hand-drawn`) layer on top.
+
+A prompt exercising several controls:
+
+```bash
+USER_PROMPT=$(cat <<'EOF'
+Generate a short narrated video
+
+topic: why fastbrowser + a11y_parse are great to scrape the web with AI
+description: |
+  Based on those 2 folders, in a monorepo
+  - https://github.com/jeromeetienne/skillmd_collection/tree/main/packages/a11y_parse
+  - https://github.com/jeromeetienne/skillmd_collection/tree/main/packages/fastbrowser_cli
+duration: 90s
+scenes: 5
+aspect: 9:16
+style: dark, neon accents
+voice: Samantha
+tone: casual, like explaining to a friend
+EOF
+)
+
+echo "$USER_PROMPT" | npx prompt2video build
+```
+
+Controls are interpreted by the bundled [skill](skills/prompt2video/SKILL.md), so they're best-effort — the deterministic ones (`aspect`, `scenes`, `voice`) are honored exactly, while `duration` is verified against the measured voice-over length and adjusted to land within ±10% of the target.
+
 ## Commands
 
 ```
