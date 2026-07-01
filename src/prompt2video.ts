@@ -263,10 +263,14 @@ async function main(): Promise<void> {
 	///////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////
 
+	const packageJsonPath = Path.resolve(__dirname, '../package.json');
+	const packageJson = JSON.parse(await Fs.promises.readFile(packageJsonPath, 'utf8')) as { version: string };
+
 	const program = new Commander.Command();
 	program
 		.name('prompt2video')
-		.description('Scaffold a Remotion project and stream Claude Code to generate a narrated AI video from a prompt.');
+		.description('Scaffold a Remotion project and stream Claude Code to generate a narrated AI video from a prompt.')
+		.version(packageJson.version, '-V, --version', 'display the version number');
 
 	program
 		.command('install [skill-folder]')
