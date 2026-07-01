@@ -20,6 +20,11 @@ export class Build {
 			process.exit(1);
 		}
 
+		// Wrap the user's topic in an explicit instruction so Claude triggers the
+		// prompt2video skill and generates a video, instead of just answering the
+		// topic as text when the stdin reads like a plain question.
+		const claudePrompt = `Use the prompt2video skill to generate a narrated video with slides about the following topic:\n\n${userPrompt}`;
+
 		///////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////
 		//
@@ -77,7 +82,7 @@ export class Build {
 
 		// This will run the claude command with the user prompt, and stream the output to the viewer.
 		// - It will also save the raw event stream to a log file for later analysis.
-		await Build.streamClaudeToViewer(userPrompt, projectDir, eventLogPath);
+		await Build.streamClaudeToViewer(claudePrompt, projectDir, eventLogPath);
 
 		///////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////

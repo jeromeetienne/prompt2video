@@ -11,17 +11,17 @@ You describe the topic; Claude writes the scenes, the narration, wires up the co
 1. Scaffolds a blank Remotion project (`npx create-video`)
 2. Installs the Remotion `claude-code` skill (`npx skills add remotion-dev/skills`)
 3. Copies the bundled [`prompt2video` skill](skills/prompt2video/SKILL.md) into the project
-4. Runs `claude -p "<your prompt>"` with streaming output piped through [`claude_stream_viewer`](https://www.npmjs.com/package/claude_stream_viewer)
+4. Wraps your stdin as the **video topic** in an explicit "generate a narrated video" instruction (so the `prompt2video` skill always triggers) and runs `claude -p "<wrapped prompt>"` with streaming output piped through [`claude_stream_viewer`](https://www.npmjs.com/package/claude_stream_viewer)
 5. Copies the generated `video.mp4`, `slides.pdf`, and the raw Claude event log to your output directory
 
 The [SKILL.md](skills/prompt2video/SKILL.md) is what teaches Claude the actual craft: budgeting narration to a 1–2 minute target, generating per-scene voice-over with macOS `say` + `ffmpeg`, sizing each Remotion `<Sequence>` from its measured MP3 duration, and assembling still frames into a PDF with ImageMagick.
 
 ## Usage
 
-Run it straight from npm — no install needed. The user prompt is read from **stdin**:
+Run it straight from npm — no install needed. Your stdin is read as the **video topic** — you don't need to spell out "generate a video", `build` wraps it into a video-generation instruction for you:
 
 ```bash
-echo "Generate a short narrated video about my latest CLI release" \
+echo "Tell me about quantum physics like I'm 10" \
   | npx prompt2video build
 
 # or pipe a prompt file
