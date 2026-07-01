@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx tsx
+#!/usr/bin/env node
 
 import ChildProcess from 'node:child_process';
 import Fs from 'node:fs';

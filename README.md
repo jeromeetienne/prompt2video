@@ -18,18 +18,25 @@ The [SKILL.md](skills/prompt2video/SKILL.md) is what teaches Claude the actual c
 
 ## Usage
 
-The user prompt is read from **stdin**:
+Run it straight from npm — no install needed. The user prompt is read from **stdin**:
 
 ```bash
 echo "Generate a short narrated video about my latest CLI release" \
-  | npx tsx src/prompt2video.ts build
+  | npx prompt2video build
 
 # or pipe a prompt file
-cat prompt.txt | npx tsx src/prompt2video.ts build
+cat prompt.txt | npx prompt2video build
 
 # with custom directories
 echo "my prompt" \
-  | npx tsx src/prompt2video.ts build --tmp-dir /tmp --output-dir ~/Videos
+  | npx prompt2video build --tmp-dir /tmp --output-dir ~/Videos
+```
+
+Or install it globally:
+
+```bash
+npm install -g prompt2video
+echo "my prompt" | prompt2video build
 ```
 
 A richer prompt with a topic and source material:
@@ -46,7 +53,7 @@ description: |
 EOF
 )
 
-echo "$USER_PROMPT" | npx tsx src/prompt2video.ts build
+echo "$USER_PROMPT" | npx prompt2video build
 ```
 
 The `build` command exits with an error if no prompt is piped on stdin.
@@ -72,7 +79,7 @@ Commands:
 ```
 Options:
   -t, --tmp-dir <dir>     parent directory for the generated project (default: "/tmp")
-  -o, --output-dir <dir>  output directory for the generated video (mp4/pdf/log) (default: "/tmp")
+  -o, --output-dir <dir>  output directory for the generated video (mp4/pdf/log) (default: "./outputs")
   -h, --help              display help for command
 ```
 
@@ -91,7 +98,7 @@ This tool orchestrates several external programs. You need them on your `PATH`:
 The bundled skill can be dropped into any Claude Code agent on its own:
 
 ```bash
-npx tsx src/prompt2video.ts install ~/.claude
+npx prompt2video install ~/.claude
 # installs skills/prompt2video into ~/.claude/skills/prompt2video
 ```
 

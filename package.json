@@ -3,13 +3,19 @@
     "version": "1.0.0",
     "description": "Promptable, AI-automated video generator: give a prompt, Claude Code drives Remotion to produce a narrated MP4 + slides PDF.",
     "bin": {
-        "prompt2video": "./src/prompt2video.ts"
+        "prompt2video": "dist/prompt2video.js"
+    },
+    "main": "dist/prompt2video.js",
+    "types": "dist/prompt2video.d.ts",
+    "engines": {
+        "node": ">=20.12"
     },
     "scripts": {
         "typecheck": "tsc --noEmit",
         "build": "tsc -p tsconfig.build.json",
         "install-skill": "tsx ./src/prompt2video.ts install",
-        "video:build": "tsx ./src/prompt2video.ts build"
+        "video:build": "tsx ./src/prompt2video.ts build",
+        "publish:all": "npm run build && npm version patch && npm publish"
     },
     "keywords": [
         "claude",
@@ -34,8 +40,10 @@
         "url": "https://github.com/jeromeetienne/prompt2video/issues"
     },
     "files": [
-        "src",
-        "skills"
+        "dist",
+        "skills",
+        "LICENSE",
+        "README.md"
     ],
     "devDependencies": {
         "@types/node": "^20.0.0",
