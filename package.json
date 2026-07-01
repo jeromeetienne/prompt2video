@@ -1,0 +1,48 @@
+{
+    "name": "prompt2video",
+    "version": "1.0.0",
+    "description": "Promptable, AI-automated video generator: give a prompt, Claude Code drives Remotion to produce a narrated MP4 + slides PDF.",
+    "bin": {
+        "prompt2video": "./src/prompt2video.ts"
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit",
+        "build": "tsc -p tsconfig.build.json",
+        "install-skill": "tsx ./src/prompt2video.ts install",
+        "video:build": "tsx ./src/prompt2video.ts build"
+    },
+    "keywords": [
+        "claude",
+        "claude-code",
+        "remotion",
+        "video",
+        "ai",
+        "prompt",
+        "automation",
+        "voice-over",
+        "cli"
+    ],
+    "author": "Jerome Etienne <jerome.etienne@gmail.com>",
+    "license": "MIT",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jeromeetienne/prompt2video.git"
+    },
+    "homepage": "https://github.com/jeromeetienne/prompt2video#readme",
+    "bugs": {
+        "url": "https://github.com/jeromeetienne/prompt2video/issues"
+    },
+    "files": [
+        "src",
+        "skills"
+    ],
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "tsx": "^4.21.0",
+        "typescript": "^5.3.3"
+    },
+    "dependencies": {
+        "commander": "^14.0.3"
+    }
+}
