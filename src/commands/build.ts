@@ -1,58 +1,19 @@
-#!/usr/bin/env node
-
 import ChildProcess from 'node:child_process';
 import Fs from 'node:fs';
 import Path from 'node:path';
-import * as Commander from 'commander';
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-//	Constants and utilities
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-//
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+export class Build {
 
-export class MainHelper {
-
-	static async commandInstall(skillFolder: string): Promise<void> {
-		const sourceSkillsDir = Path.resolve(__dirname, '../skills');
-		const targetSkillsDir = Path.resolve(skillFolder, 'skills');
-		try {
-			const entries = await Fs.promises.readdir(sourceSkillsDir, { withFileTypes: true });
-			const skillDirs = entries.filter((entry) => entry.isDirectory() === true);
-			if (skillDirs.length === 0) {
-				console.error(`prompt2video error: no skills found in ${sourceSkillsDir}`);
-				process.exit(1);
-			}
-			for (const skillDir of skillDirs) {
-				const sourceDir = Path.join(sourceSkillsDir, skillDir.name);
-				const targetDir = Path.join(targetSkillsDir, skillDir.name);
-				await Fs.promises.cp(sourceDir, targetDir, { recursive: true });
-				console.log(`Installed ${skillDir.name} skill at ${targetDir}`);
-			}
-		} catch (err) {
-			const message = err instanceof Error ? err.message : String(err);
-			console.error(`prompt2video error: ${message}`);
-			process.exit(1);
-		}
-	}
-
-
-	static async commandBuild(options: { tmpDir: string; outputDir: string }): Promise<void> {
+	static async run(options: { tmpDir: string; outputDir: string }): Promise<void> {
 		///////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////
 		//	Read user prompt from stdin
 		///////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////
 
-		const userPrompt = (await MainHelper.readStdin()).trim();
+		const userPrompt = (await Build.readStdin()).trim();
 		if (userPrompt.length === 0) {
 			console.error('Error: no user prompt provided on stdin.');
 			console.error('Usage: echo "my prompt" | npx tsx prompt2video.ts build');
@@ -98,7 +59,7 @@ export class MainHelper {
 
 		// FIXME use --install
 		console.log('Copying prompt2video skill to project...');
-		const skillSource = Path.resolve(__dirname, '../skills/prompt2video');
+		const skillSource = Path.resolve(__dirname, '../../skills/prompt2video');
 		const skillDest = Path.join(projectDir, '.claude/skills/prompt2video');
 		Fs.cpSync(skillSource, skillDest, { recursive: true, preserveTimestamps: true });
 
@@ -116,7 +77,7 @@ export class MainHelper {
 
 		// This will run the claude command with the user prompt, and stream the output to the viewer.
 		// - It will also save the raw event stream to a log file for later analysis.
-		await MainHelper.streamClaudeToViewer(userPrompt, projectDir, eventLogPath);
+		await Build.streamClaudeToViewer(userPrompt, projectDir, eventLogPath);
 
 		///////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////
@@ -249,52 +210,3 @@ export class MainHelper {
 		});
 	}
 }
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-//
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-async function main(): Promise<void> {
-	///////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////
-	//
-	///////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////
-
-	const packageJsonPath = Path.resolve(__dirname, '../package.json');
-	const packageJson = JSON.parse(await Fs.promises.readFile(packageJsonPath, 'utf8')) as { version: string };
-
-	const program = new Commander.Command();
-	program
-		.name('prompt2video')
-		.description('Scaffold a Remotion project and stream Claude Code to generate a narrated AI video from a prompt.')
-		.version(packageJson.version, '-V, --version', 'display the version number');
-
-	program
-		.command('install [skill-folder]')
-		.description('Install all bundled skills into <skill-folder>/skills/ (default: .)')
-		.action(async (skillFolder: string | undefined) => {
-			await MainHelper.commandInstall(skillFolder ?? '.');
-		});
-
-	program
-		.command('build')
-		.description('Scaffold the Remotion project, run Claude, and copy the generated artifacts.')
-		.option('-t, --tmp-dir <dir>', 'parent directory for the generated project', '/tmp')
-		.option('-o, --output-dir <dir>', 'output directory for the generated video (mp4/pdf/log)', './outputs')
-		.action(async (options: { tmpDir: string; outputDir: string }) => {
-			await MainHelper.commandBuild(options);
-		});
-
-	///////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////
-	//
-	///////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////
-
-	await program.parseAsync(process.argv);
-}
-
-void main();
