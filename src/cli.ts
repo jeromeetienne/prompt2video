@@ -32,7 +32,7 @@ export class Cli {
 			.command('build')
 			.description('Scaffold the Remotion project, run Claude, and copy the generated artifacts.')
 			.option('-t, --tmp-dir <dir>', 'parent directory for the generated project', '/tmp')
-			.option('-o, --output-dir <dir>', 'output directory for the generated video (mp4/pdf/log)', './outputs')
+			.option('-o, --output-dir <dir>', 'output directory for the generated video (mp4/pdf/log)', '.')
 			.action(async (options: { tmpDir: string; outputDir: string }) => {
 				await Build.run(options);
 			});
