@@ -43,8 +43,6 @@ A richer prompt with a topic and source material:
 
 ```bash
 USER_PROMPT=$(cat <<'EOF'
-Generate a short narrated video
-
 topic: why fastbrowser + a11y_parse are great to scrape the web with AI
 description: |
   Based on those 2 folders, in a monorepo
@@ -82,8 +80,6 @@ A prompt exercising several controls:
 
 ```bash
 USER_PROMPT=$(cat <<'EOF'
-Generate a short narrated video
-
 topic: why fastbrowser + a11y_parse are great to scrape the web with AI
 description: |
   Based on those 2 folders, in a monorepo
