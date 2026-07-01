@@ -129,6 +129,7 @@ export class MainHelper {
 		// {projectDir}/out/slides.pdf
 		// {projectDir}/out/video.claude_events.jsonl
 		const outputFiles = ['video.mp4', 'slides.pdf', 'video.claude_events.jsonl'];
+		await Fs.promises.mkdir(options.outputDir, { recursive: true });
 		for (const outputFile of outputFiles) {
 			const pathSrc = Path.join(projectDir, 'out', outputFile);
 			const pathDest = Path.join(options.outputDir, `${projectName}_${outputFile}`);
@@ -278,7 +279,7 @@ async function main(): Promise<void> {
 		.command('build')
 		.description('Scaffold the Remotion project, run Claude, and copy the generated artifacts.')
 		.option('-t, --tmp-dir <dir>', 'parent directory for the generated project', '/tmp')
-		.option('-o, --output-dir <dir>', 'output directory for the generated video (mp4/pdf/log)', '/tmp')
+		.option('-o, --output-dir <dir>', 'output directory for the generated video (mp4/pdf/log)', './outputs')
 		.action(async (options: { tmpDir: string; outputDir: string }) => {
 			await MainHelper.commandBuild(options);
 		});
