@@ -1,6 +1,6 @@
 {
     "name": "prompt2video",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Promptable, AI-automated video generator: give a prompt, Claude Code drives Remotion to produce a narrated MP4 + slides PDF.",
     "bin": {
         "prompt2video": "dist/prompt2video.js"
